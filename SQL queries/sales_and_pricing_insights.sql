@@ -55,4 +55,24 @@ SELECT brand, ROUND(AVG(sold_date - post_date), 1) as "avg days to sell", COUNT(
 SELECT * FROM brands_avg_days_to_sell
 	WHERE "count" > 50
 	ORDER BY "avg days to sell" ASC;
-	
+
+-- 4. brands with highest proportion of original price
+
+SELECT brand, ROUND(AVG(CAST(proportion_original_price as numeric)), 2) AS "average proportion", ROUND(AVG(sold_price), 2) AS "average price" FROM tops
+	WHERE proportion_original_price IS NOT NULL AND proportion_original_price <= 1
+	GROUP BY brand
+	ORDER BY "average proportion" DESC;
+
+-- 5. average prices for types of tops
+
+CREATE TEMPORARY TABLE categories AS
+SELECT name,
+	(LOWER(name) LIKE '%blouse%') as blouse,
+	(LOWER(name) LIKE '%tank%') as tank,
+	(LOWER(name) LIKE '%crop%') as crop
+FROM tops
+
+SELECT * FROM categories
+	WHERE tank is True
+
+
